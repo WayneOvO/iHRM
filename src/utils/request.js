@@ -104,7 +104,6 @@ service.interceptors.request.use()
 // response interceptor
 service.interceptors.response.use(
   (response) => {
-    console.log(response)
     const { success, message, data } = response.data
     if (success) {
       return data
@@ -114,7 +113,6 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log(error)
     Message.error(error.message)
     return Promise.reject(new Error(error.message))
   }

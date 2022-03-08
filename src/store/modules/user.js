@@ -115,10 +115,10 @@ export default {
     }
   },
   actions: {
-    async login({ commit }, userInfo) {
+    async login({ commit }, loginForm) {
       try {
-        const result = await login(userInfo)
-        commit('setUserToken', result.data.data)
+        const token = await login(loginForm)
+        commit('setUserToken', token)
       } catch (e) {
         console.log(e)
       }

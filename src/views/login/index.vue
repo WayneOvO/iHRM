@@ -83,7 +83,7 @@ export default {
         password: '123456'
       },
       loginRules: {
-        username: [
+        mobile: [
           { required: true, trigger: 'blur', message: '手机号不能为空' },
           { validator: validateMobile, trigger: 'blur' }
         ],
@@ -117,15 +117,17 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(async(valid) => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+          try {
+            this.loading = true
+            await this.$store.dispatch('user/login', this.loginForm)
+            this.$router.push('/')
+          } catch (e) {
+            console.log(e)
+          } finally {
             this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -168,8 +170,8 @@ $cursor: #fff;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        box-shadow: 0 0 0 1000px #d3e3ff inset !important;
+        -webkit-text-fill-color: $light_gray !important;
       }
     }
   }

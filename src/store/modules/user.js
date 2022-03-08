@@ -96,9 +96,34 @@
 // }
 //
 
+import { getUserToken, setUserToken, removeUserToken } from '@/utils/auth.js'
+import { login } from '@/api/user.js'
+
 export default {
   namespaced: true,
-  state: {},
-  mutations: {},
-  actions: {}
+  state: {
+    userToken: getUserToken()
+  },
+  mutations: {
+    setUserToken(state, UserToken) {
+      state.userToken = UserToken
+      setUserToken(UserToken)
+    },
+    removeUserToken(state) {
+      state.userToken = null
+      removeUserToken()
+    }
+  },
+  actions: {
+    async login({ commit }, userInfo) {
+      try {
+        const result = await login(userInfo)
+        if (result.data.success) {
+          commit('setUserToken', result.data.data)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
 }

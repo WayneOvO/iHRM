@@ -21,7 +21,7 @@
         </span>
         <el-input
           ref="mobile"
-          v-model="loginForm.mobile"
+          v-model.trim="loginForm.mobile"
           placeholder="请输入手机号"
           name="mobile"
           type="text"
@@ -37,7 +37,7 @@
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model.trim="loginForm.password"
           :type="passwordType"
           placeholder="请输入密码"
           name="password"

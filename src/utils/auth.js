@@ -1,15 +1,15 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'vue_admin_template_token'
+const iHRM_USER_TOKEN = 'iHRM_USER_TOKEN'
 
-export function getToken() {
-  return Cookies.get(TokenKey)
+export function getUserToken() {
+  return Cookies.get(iHRM_USER_TOKEN)
 }
 
-export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+export function setUserToken(token) {
+  return Cookies.set(iHRM_USER_TOKEN, token)
 }
 
-export function removeToken() {
-  return Cookies.remove(TokenKey)
+export function removeUserToken() {
+  return Cookies.remove(iHRM_USER_TOKEN)
 }

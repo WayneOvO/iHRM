@@ -12,7 +12,7 @@
 //
 // // request interceptor
 // service.interceptors.request.use(
-//   config => {
+//   (config) => {
 //     // do something before request is sent
 //
 //     if (store.getters.token) {
@@ -23,7 +23,7 @@
 //     }
 //     return config
 //   },
-//   error => {
+//   (error) => {
 //     // do something with request error
 //     console.log(error) // for debug
 //     return Promise.reject(error)
@@ -35,14 +35,14 @@
 //   /**
 //    * If you want to get http information such as headers or status
 //    * Please return  response => response
-//   */
+//    */
 //
 //   /**
 //    * Determine the request status by custom code
 //    * Here is just an example
 //    * You can also judge the status by HTTP Status Code
 //    */
-//   response => {
+//   (response) => {
 //     const res = response.data
 //
 //     // if the custom code is not 20000, it is judged as an error.
@@ -56,11 +56,15 @@
 //       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
 //       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
 //         // to re-login
-//         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-//           confirmButtonText: 'Re-Login',
-//           cancelButtonText: 'Cancel',
-//           type: 'warning'
-//         }).then(() => {
+//         MessageBox.confirm(
+//           'You have been logged out, you can cancel to stay on this page, or log in again',
+//           'Confirm logout',
+//           {
+//             confirmButtonText: 'Re-Login',
+//             cancelButtonText: 'Cancel',
+//             type: 'warning'
+//           }
+//         ).then(() => {
 //           store.dispatch('user/resetToken').then(() => {
 //             location.reload()
 //           })
@@ -71,7 +75,7 @@
 //       return res
 //     }
 //   },
-//   error => {
+//   (error) => {
 //     console.log('err' + error) // for debug
 //     Message({
 //       message: error.message,
@@ -85,14 +89,35 @@
 // export default service
 
 import Axios from 'axios'
+import { Message } from 'element-ui'
 
 // create an axios instance
-const service = Axios.create({})
+const service = Axios.create({
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // withCredentials: true, // send cookies when cross-domain requests
+  timeout: 5000 // request timeout (ms)
+})
 
 // request interceptor
 service.interceptors.request.use()
 
 // response interceptor
-service.interceptors.response.use()
+service.interceptors.response.use(
+  (response) => {
+    console.log(response)
+    const { success, message, data } = response.data
+    if (success) {
+      return data
+    } else {
+      Message.error(message)
+      return Promise.reject(new Error(message))
+    }
+  },
+  (error) => {
+    console.log(error)
+    Message.error(error.message)
+    return Promise.reject(new Error(error.message))
+  }
+)
 
 export default service

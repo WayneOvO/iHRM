@@ -118,11 +118,9 @@ export default {
     async login({ commit }, userInfo) {
       try {
         const result = await login(userInfo)
-        if (result.data.success) {
-          commit('setUserToken', result.data.data)
-        }
+        commit('setUserToken', result.data.data)
       } catch (e) {
-        console.error(e)
+        console.log(e)
       }
     }
   }

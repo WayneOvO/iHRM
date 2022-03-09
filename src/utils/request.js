@@ -90,6 +90,7 @@
 
 import Axios from 'axios'
 import { Message } from 'element-ui'
+import store from '@/store/index.js'
 
 // create an axios instance
 const service = Axios.create({
@@ -99,7 +100,17 @@ const service = Axios.create({
 })
 
 // request interceptor
-service.interceptors.request.use()
+service.interceptors.request.use(
+  (config) => {
+    if (store.getters.userToken) {
+      config.headers['Authorization'] = `Bearer ${store.getters.userToken}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 // response interceptor
 service.interceptors.response.use(

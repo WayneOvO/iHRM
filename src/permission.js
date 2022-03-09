@@ -62,3 +62,47 @@
 //   // finish progress bar
 //   NProgress.done()
 // })
+
+import router from '@/router/index.js'
+import store from '@/store/index.js'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+// import getPageTitle from '@/utils/get-page-title.js'
+
+const WHITE_LIST = ['/404', '/login']
+
+// 路由的前置守卫
+router.beforeEach((to, from, next) => {
+  // start progress bar
+  NProgress.start()
+
+  // set page title
+  // document.title = getPageTitle(to.meta.title)
+
+  // determine whether the user has logged in
+  if (store.getters.userToken) {
+    // 有 token
+    if (to.path === '/login') {
+      next('/')
+    } else {
+      next()
+    }
+  } else {
+    // 无 token
+    if (WHITE_LIST.indexOf(to.path) !== -1) {
+      // 在白名单内
+      next()
+    } else {
+      // 不在白名单内
+      next('/login')
+    }
+  }
+
+  // finish progress bar
+  NProgress.done()
+})
+
+// 路由的后置守卫
+router.afterEach(() => {
+  NProgress.done()
+})

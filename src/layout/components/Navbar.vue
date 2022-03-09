@@ -12,6 +12,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
+            v-image_error="require('@/assets/common/bigUserHeader.png')"
             :src="staffPhoto"
             class="user-avatar"
             alt=""

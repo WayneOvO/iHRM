@@ -72,7 +72,7 @@ import 'nprogress/nprogress.css'
 const WHITE_LIST = ['/404', '/login']
 
 // 路由的前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
 
@@ -85,6 +85,14 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next('/')
     } else {
+      if (!store.getters.userId) {
+        try {
+          await store.dispatch('user/getUserInfo')
+        } catch (e) {
+          console.log(e)
+        }
+      }
+
       next()
     }
   } else {

@@ -97,7 +97,7 @@
 //
 
 import { getUserToken, setUserToken, removeUserToken } from '@/utils/auth.js'
-import { getUserInfo, login } from '@/api/user.js'
+import { getUserDetailById, getUserInfo, login } from '@/api/user.js'
 
 export default {
   namespaced: true,
@@ -133,7 +133,8 @@ export default {
     async getUserInfo({ commit }) {
       try {
         const userInfo = await getUserInfo()
-        commit('setUserInfo', userInfo)
+        const userDetail = await getUserDetailById(userInfo.userId)
+        commit('setUserInfo', { ...userInfo, ...userDetail })
         return userInfo
       } catch (e) {
         console.log(e)

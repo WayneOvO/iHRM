@@ -97,12 +97,13 @@
 //
 
 import { getUserToken, setUserToken, removeUserToken } from '@/utils/auth.js'
-import { login } from '@/api/user.js'
+import { getUserInfo, login } from '@/api/user.js'
 
 export default {
   namespaced: true,
   state: {
-    userToken: getUserToken()
+    userToken: getUserToken(),
+    userInfo: {}
   },
   mutations: {
     setUserToken(state, UserToken) {
@@ -112,6 +113,12 @@ export default {
     removeUserToken(state) {
       state.userToken = null
       removeUserToken()
+    },
+    setUserInfo(state, userInfo) {
+      state.userInfo = userInfo
+    },
+    removeUserInfo(state) {
+      state.userInfo = {}
     }
   },
   actions: {
@@ -119,6 +126,15 @@ export default {
       try {
         const token = await login(loginForm)
         commit('setUserToken', token)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async getUserInfo({ commit }) {
+      try {
+        const userInfo = await getUserInfo()
+        commit('setUserInfo', userInfo)
+        return userInfo
       } catch (e) {
         console.log(e)
       }

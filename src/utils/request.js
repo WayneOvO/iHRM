@@ -89,8 +89,12 @@
 // export default service
 
 import Axios from 'axios'
-import { Message } from 'element-ui'
 import store from '@/store/index.js'
+import router from '@/router/index.js'
+import { Message } from 'element-ui'
+import { getTimeStamp } from '@/utils/auth.js'
+
+const TIME_OUT = 60 * 60 * 1000 // 1h
 
 // create an axios instance
 const service = Axios.create({
@@ -101,8 +105,15 @@ const service = Axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  (config) => {
+  async(config) => {
     if (store.getters.userToken) {
+      // 有token
+      if (Date.now() - getTimeStamp() > TIME_OUT) {
+        // token过期了
+        await store.dispatch('user/logout')
+        router.push('/login')
+        return Promise.reject(new Error('token过期了'))
+      }
       config.headers['Authorization'] = `Bearer ${store.getters.userToken}`
     }
     return config

@@ -96,7 +96,12 @@
 // }
 //
 
-import { getUserToken, setUserToken, removeUserToken } from '@/utils/auth.js'
+import {
+  getUserToken,
+  setUserToken,
+  removeUserToken,
+  setTimeStamp
+} from '@/utils/auth.js'
 import { getUserDetailById, getUserInfo, login } from '@/api/user.js'
 
 export default {
@@ -125,6 +130,7 @@ export default {
     async login({ commit }, loginForm) {
       const token = await login(loginForm)
       commit('setUserToken', token)
+      setTimeStamp() // 存入时间戳
     },
     async getUserInfo({ commit }) {
       const userInfo = await getUserInfo()

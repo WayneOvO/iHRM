@@ -134,8 +134,14 @@ service.interceptors.response.use(
       return Promise.reject(new Error(message))
     }
   },
-  (error) => {
-    Message.error(error.message)
+  async(error) => {
+    if (error.response?.data?.code === 10002) {
+      // code 10002
+      await store.dispatch('user/logout')
+      router.push('/login')
+    } else {
+      Message.error(error.message)
+    }
     return Promise.reject(new Error(error.message))
   }
 )

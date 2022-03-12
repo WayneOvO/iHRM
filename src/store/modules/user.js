@@ -123,22 +123,18 @@ export default {
   },
   actions: {
     async login({ commit }, loginForm) {
-      try {
-        const token = await login(loginForm)
-        commit('setUserToken', token)
-      } catch (e) {
-        console.log(e)
-      }
+      const token = await login(loginForm)
+      commit('setUserToken', token)
     },
     async getUserInfo({ commit }) {
-      try {
-        const userInfo = await getUserInfo()
-        const userDetail = await getUserDetailById(userInfo.userId)
-        commit('setUserInfo', { ...userInfo, ...userDetail })
-        return userInfo
-      } catch (e) {
-        console.log(e)
-      }
+      const userInfo = await getUserInfo()
+      const userDetail = await getUserDetailById(userInfo.userId)
+      commit('setUserInfo', { ...userInfo, ...userDetail })
+      return userInfo
+    },
+    logout({ commit }) {
+      commit('removeUserToken')
+      commit('removeUserInfo')
     }
   }
 }

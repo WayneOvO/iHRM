@@ -10,7 +10,7 @@ export default {
       component: () => import('@/views/departments'),
       meta: {
         title: '组织架构',
-        icon: 'form'
+        icon: 'tree'
       }
     }
   ]

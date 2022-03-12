@@ -112,7 +112,7 @@ service.interceptors.request.use(
         // token过期了
         await store.dispatch('user/logout')
         router.push('/login')
-        return Promise.reject(new Error('token过期了'))
+        return Promise.reject(new Error('token过期了哟'))
       }
       config.headers['Authorization'] = `Bearer ${store.getters.userToken}`
     }
@@ -136,7 +136,7 @@ service.interceptors.response.use(
   },
   async(error) => {
     if (error.response?.data?.code === 10002) {
-      // code 10002
+      // code 10002  处理token过期
       await store.dispatch('user/logout')
       router.push('/login')
     } else {

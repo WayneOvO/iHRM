@@ -22,26 +22,30 @@
 
 <script>
 import TreeTools from '@/views/departments/components/TreeTools.vue'
+import { getDepartments } from '@/api/departments.js'
+import { listToTree } from '@/utils/index.js'
 
 export default {
   name: 'Departments',
   components: { TreeTools },
   data() {
     return {
-      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' },
-      departments: [
-        {
-          name: '总裁办',
-          manager: '曹操',
-          children: [{ name: '董事会', manager: '曹丕' }]
-        },
-        { name: '行政部', manager: '刘备' },
-        { name: '人事部', manager: '孙权' }
-      ],
+      company: {},
+      departments: [],
       defaultProps: {
         label: 'name',
         children: 'children'
       }
+    }
+  },
+  created() {
+    this.getDepartments()
+  },
+  methods: {
+    async getDepartments() {
+      const data = await getDepartments()
+      this.company = { name: data.companyName, manager: '负责人' }
+      this.departments = listToTree(data.depts, '')
     }
   }
 }

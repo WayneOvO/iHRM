@@ -8,7 +8,7 @@
     <el-col>
       <span>{{ treeNode.name }}</span>
     </el-col>
-    <el-col :span="4">
+    <el-col :span="6">
       <el-row type="flex" justify="end">
         <el-col>{{ treeNode.manager }}</el-col>
         <el-col>

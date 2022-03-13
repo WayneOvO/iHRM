@@ -24,5 +24,3 @@ export function getUserDetailById(id) {
     method: 'GET'
   })
 }
-
-export function logout() {}

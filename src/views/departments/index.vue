@@ -10,7 +10,7 @@
         <!--tree-->
         <el-tree :data="departments" :props="defaultProps" default-expand-all>
           <template v-slot="{ data }">
-            <TreeTools :tree-node="data" />
+            <TreeTools :tree-node="data" @delDepartments="getDepartments" />
           </template>
         </el-tree>
         <!--/tree-->

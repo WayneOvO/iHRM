@@ -2,32 +2,43 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
-
         <!--头部-->
-        <TreeTools :tree-node="company" :is-root="true" />
+        <TreeTools
+          :tree-node="company"
+          :is-root="true"
+          @addDepartment="addDepartment"
+        />
         <!--/头部-->
 
         <!--tree-->
         <el-tree :data="departments" :props="defaultProps" default-expand-all>
           <template v-slot="{ data }">
-            <TreeTools :tree-node="data" @delDepartments="getDepartments" />
+            <TreeTools
+              :tree-node="data"
+              @addDepartment="addDepartment"
+              @delDepartments="getDepartments"
+            />
           </template>
         </el-tree>
         <!--/tree-->
-
       </el-card>
+
+      <AddDepartment
+        :show-dialog="showDialog"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import TreeTools from '@/views/departments/components/TreeTools.vue'
+import AddDepartment from '@/views/departments/components/AddDepartment.vue'
 import { getDepartments } from '@/api/departments.js'
 import { listToTree } from '@/utils/index.js'
 
 export default {
   name: 'Departments',
-  components: { TreeTools },
+  components: { AddDepartment, TreeTools },
   data() {
     return {
       company: {},
@@ -35,7 +46,9 @@ export default {
       defaultProps: {
         label: 'name',
         children: 'children'
-      }
+      },
+      showDialog: false,
+      treeNode: null
     }
   },
   created() {
@@ -46,6 +59,10 @@ export default {
       const data = await getDepartments()
       this.company = { name: data.companyName, manager: '负责人' }
       this.departments = listToTree(data.depts, '')
+    },
+    addDepartment(treeNode) {
+      this.showDialog = true
+      this.treeNode = treeNode
     }
   }
 }

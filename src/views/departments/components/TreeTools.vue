@@ -46,7 +46,8 @@ export default {
   methods: {
     handleDepartment(command) {
       if (command === 'add') {
-        this.$message('add')
+        this.$emit('addDepartment', this.treeNode)
+        // this.$message('add')
       } else if (command === 'edit') {
         this.$message('edit')
       } else if (command === 'del') {

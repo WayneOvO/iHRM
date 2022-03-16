@@ -25,6 +25,7 @@
 
       <AddDepartment
         :show-dialog="showDialog"
+        :tree-node="treeNode"
       />
     </div>
   </div>
@@ -57,7 +58,7 @@ export default {
   methods: {
     async getDepartments() {
       const data = await getDepartments()
-      this.company = { name: data.companyName, manager: '负责人' }
+      this.company = { name: data.companyName, manager: '负责人', id: '' }
       this.departments = listToTree(data.depts, '')
     },
     addDepartment(treeNode) {

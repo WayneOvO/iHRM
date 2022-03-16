@@ -7,6 +7,7 @@ export function isExternal(path) {
 }
 
 /**
+ * 校验 Username
  * @param {string} str
  * @returns {Boolean}
  */
@@ -16,10 +17,19 @@ export function validUsername(str) {
 }
 
 /**
- * 校验手机号
+ * 校验 Mobile
  * @param {string} str
  * @returns {Boolean}
  */
 export function validMobile(str) {
+  return /^1[3-9]\d{9}$/.test(str)
+}
+
+/**
+ * 校验 Mobile
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validD(str) {
   return /^1[3-9]\d{9}$/.test(str)
 }

@@ -3,8 +3,9 @@
     title="新增部门"
     center
     :visible="showDialog"
+    @close="onCancel"
   >
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="departmentForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item prop="name" label="名称">
         <el-input v-model="formData.name" style="width: 80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -28,15 +29,15 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button size="small" type="primary" @click="showDialog = false">确 定</el-button>
-        <el-button size="small" @click="showDialog = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="onSubmit">确 定</el-button>
+        <el-button size="small" @click="onCancel">取 消</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments.js'
+import { addDepartments, getDepartments } from '@/api/departments.js'
 import { getEmployeeSimple } from '@/api/employees.js'
 
 export default {
@@ -90,16 +91,21 @@ export default {
     }
   },
   methods: {
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then((_) => {
-          done()
-        })
-        .catch((_) => {
-        })
-    },
     async onFocus() {
       this.people = await getEmployeeSimple()
+    },
+    onSubmit() {
+      this.$refs.departmentForm.validate(async valid => {
+        if (valid) {
+          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          this.$emit('addDepartment')
+          this.$emit('update:showDialog', false)
+        }
+      })
+    },
+    onCancel() {
+      this.$refs.departmentForm.resetFields()
+      this.$emit('update:showDialog', false)
     }
   }
 }

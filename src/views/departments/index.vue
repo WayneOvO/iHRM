@@ -17,6 +17,7 @@
               :tree-node="data"
               @addDepartment="addDepartment"
               @delDepartments="getDepartments"
+              @editDepartment="editDepartment"
             />
           </template>
         </el-tree>
@@ -24,6 +25,7 @@
       </el-card>
 
       <AddDepartment
+        ref="addDept"
         :show-dialog.sync="showDialog"
         :tree-node="treeNode"
         @addDepartment="getDepartments"
@@ -65,6 +67,11 @@ export default {
     addDepartment(treeNode) {
       this.showDialog = true
       this.treeNode = treeNode
+    },
+    editDepartment(treeNode) {
+      this.treeNode = treeNode
+      this.$refs.addDept.getDepartmentsDetail(treeNode.id)
+      this.showDialog = true
     }
   }
 }

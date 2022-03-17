@@ -49,7 +49,8 @@ export default {
         this.$emit('addDepartment', this.treeNode)
         // this.$message('add')
       } else if (command === 'edit') {
-        this.$message('edit')
+        this.$emit('editDepartment', this.treeNode)
+        // this.$message('edit')
       } else if (command === 'del') {
         this.$confirm('您确定要删除该部门吗?').then(() => {
           return delDepartments(this.treeNode.id)

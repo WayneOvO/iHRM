@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="新增部门"
+    :title="showTitle"
     center
     :visible="showDialog"
     @close="onCancel"
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { addDepartments, getDepartments } from '@/api/departments.js'
+import { addDepartments, getDepartmentDetail, getDepartments } from '@/api/departments.js'
 import { getEmployeeSimple } from '@/api/employees.js'
 
 export default {
@@ -90,6 +90,11 @@ export default {
       people: []
     }
   },
+  computed: {
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增部门'
+    }
+  },
   methods: {
     async onFocus() {
       this.people = await getEmployeeSimple()
@@ -104,8 +109,17 @@ export default {
       })
     },
     onCancel() {
-      this.$refs.departmentForm.resetFields()
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       this.$emit('update:showDialog', false)
+      this.$refs.departmentForm.resetFields()
+    },
+    async getDepartmentsDetail(id) {
+      this.formData = await getDepartmentDetail(id)
     }
   }
 }

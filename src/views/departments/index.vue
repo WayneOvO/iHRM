@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div v-loading="loading" class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
         <!--头部-->
@@ -52,7 +52,8 @@ export default {
         children: 'children'
       },
       showDialog: false,
-      treeNode: null
+      treeNode: null,
+      loading: false
     }
   },
   created() {
@@ -60,9 +61,11 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.loading = true
       const data = await getDepartments()
       this.company = { name: data.companyName, manager: '负责人', id: '' }
       this.departments = listToTree(data.depts, '')
+      this.loading = false
     },
     addDepartment(treeNode) {
       this.showDialog = true

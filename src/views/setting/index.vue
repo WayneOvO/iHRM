@@ -15,9 +15,11 @@
               <el-table-column align="center" label="角色名" width="240" prop="name" />
               <el-table-column align="center" label="描述" prop="description" />
               <el-table-column align="center" label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <template v-slot="{row}">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary" @click="editRole(row.id)">编辑</el-button>
+                  <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
 
@@ -63,11 +65,32 @@
         </el-tabs>
       </el-card>
     </div>
+
+    <!--编辑-弹层-->
+    <el-dialog title="编辑部门" :visible="showDialog">
+      <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="100px">
+        <el-form-item prop="name" label="角色名称">
+          <el-input v-model="roleForm.name" />
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description" />
+        </el-form-item>
+      </el-form>
+      <!-- 底部 -->
+      <template #footer>
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small" @click="btnCancel">取消</el-button>
+            <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+          </el-col>
+        </el-row>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo } from '@/api/setting.js'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting.js'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -80,7 +103,15 @@ export default {
         pagesize: 10,
         total: 0
       },
-      formData: {}
+      formData: {},
+      showDialog: false,
+      roleForm: {
+        name: '',
+        description: ''
+      },
+      rules: {
+        name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
+      }
     }
   },
   computed: {
@@ -102,6 +133,31 @@ export default {
     changePage(newPage) {
       this.page.page = newPage
       this.getRoleList()
+    },
+    async deleteRole(id) {
+      try {
+        await this.$confirm('是否删除该角色?')
+        await deleteRole(id)
+        await this.getRoleList()
+        this.$message.success('删除角色成功')
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async editRole(id) {
+      this.roleForm = await getRoleDetail(id)
+      this.showDialog = true // 显示弹出层
+    },
+    async btnOK() {
+      try {
+        await this.$refs.roleForm.validate()
+        await updateRole(this.roleForm)
+        await this.getRoleList()
+        this.$message.success('操作成功')
+        this.showDialog = false
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
